@@ -1,0 +1,41 @@
+body{
+    background-color: #181818;
+    color:white;
+}
+
+/* THIS IS FOR CENTER IN THE MIDDLE OF THE SCREEN */
+#calculator{
+    height: 100vh;
+    display:flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Only the buttons */
+input[type=button] {
+    width:100px;
+    height:100px;
+    font-size:30px;
+}
+
+/* Our result text input */
+#result {
+    font-size: 60px;
+    text-align: right;
+    width:100%;
+    max-width:420px; 
+}
+
+/* Style for numeric */
+.numericButton {
+    background:white;
+    border: 0px;
+    color: #ef3d59;
+}
+
+/* style for special */
+.specialButton {
+    background: #ef3d59;
+    border: 0px;
+    color:white;
+}

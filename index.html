@@ -1,13 +1,156 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>Document</title>
-</head>
-<body>
-   /* this is the Calculator   */ 
-    
-</body>
+    <link rel="stylesheet" type="text/css" href="index.css" />
+  </head>
+  <body>
+    <!-- 
+        This is what we want to achieve
+        1) [DONE] we want to create the structure of the calculator
+        2) [DONE] we want add the style for the calculator
+        3) [TODO] we want to add the behaviour
+            a) [DONE] 0-9 to add something in the result pane
+            b) +, -, / , *
+            c) C => reset the calc
+            d) = => to get result
+        [   result
+            7 8 9 +
+            4 5 6 -
+            1 2 3 *
+            C 0 = / ]
+     -->
+
+    <div id="calculator">
+      <div class="errorMessage" >
+
+      </div>
+      <table>
+        <tr>
+          <td colspan="4">
+            <input type="number" value="0" id="result" />
+          </td>
+        </tr>
+        <tr>
+          <td><input type="button" class="numericButton" value="7" /></td>
+          <td><input type="button" class="numericButton" value="8" /></td>
+          <td><input type="button" class="numericButton" value="9" /></td>
+          <td><input type="button" class="specialButton" value="+" /></td>
+        </tr>
+        <tr>
+          <td><input type="button" class="numericButton" value="4" /></td>
+          <td><input type="button" class="numericButton" value="5" /></td>
+          <td><input type="button" class="numericButton" value="6" /></td>
+          <td><input type="button" class="specialButton" value="-" /></td>
+        </tr>
+        <tr>
+          <td><input type="button" class="numericButton" value="1" /></td>
+          <td><input type="button" class="numericButton" value="2" /></td>
+          <td><input type="button" class="numericButton" value="3" /></td>
+          <td><input type="button" class="specialButton" value="*" /></td>
+        </tr>
+        <tr>
+          <td><input type="button" class="specialButton" value="C" /></td>
+          <td><input type="button" class="numericButton" value="0" /></td>
+          <td><input type="button" class="specialButton" value="=" /></td>
+          <td><input type="button" class="specialButton" value="/" /></td>
+        </tr>
+      </table>
+    </div>
+
+    <script>
+        function numericButtonClick(event){
+            var number = event.currentTarget.value; //take the value of the button as number
+            //1) get a reference to result
+            //var result = document.getElementById("result")
+            var result = document.querySelector("#result")
+            //2) add the number to result
+            if (result.value == "0")
+                result.value = number
+            else
+                result.value += number; //string concatenation between result content and the new number
+        }
+        var previousResult = 0;
+        var selectedOperation = "+";
+        function specialButtonClick(event){
+            //we have to take care of:
+            // b) +, -, / , *
+            // c) C => reset the calc
+            // d) = => to get result
+            var pressedButton = event.currentTarget.value;
+            var result = document.querySelector("#result")
+            var actualValue = parseFloat(result.value); //we need to convert the string to a number!!!
+            var errorMessage = document.querySelector(".errorMessage");
+            errorMessage.style.display = "none"
+            // if (pressedButton == "="){
+            // } else if (pressedButton == "C"){
+            // } else{ //in all other cases 
+            // }
+            switch(pressedButton){
+                case "=":
+                    /*
+                        When = is pressed
+                        we check the previous operation.
+                        If it was a sum, we add the previous value to the current
+                        if a difference ...
+                        ...
+                        At the end, we update the result text box
+                    */
+                    // 1) i have to understand the selected operation
+                    switch(selectedOperation){
+                        case "+": 
+                            previousResult += actualValue;
+                            break;
+                        case "-":
+                            previousResult -= actualValue;
+                            break;
+                        case "*":
+                            previousResult *= actualValue;
+                            break;
+                        case "/":
+                            if (actualValue === 0){
+                                errorMessage.innerText = "Cannot divide by 0"
+                                errorMessage.style.display = "block"
+                                previousResult = 0;
+                            }
+                            else
+                                previousResult /= actualValue;
+                            break;
+                    }
+                    // 2) i have to update the result
+                    result.value = previousResult;
+                    break;
+                case "C":  //reset things
+                    previousResult = 0;
+                    result.value = 0; 
+                    break;
+                case "+": //save the current operation (+ / - * etc)
+                case "-":
+                case "/":
+                case "*":
+                    previousResult = parseFloat(result.value); //this will save the result value into a variable called previousResult 
+                    result.value = 0 //this will reset the actual value into the result
+                    selectedOperation = pressedButton; // this will save the current operation
+                    console.log("Previous result = " + previousResult + " and the selected operation is: " + selectedOperation)
+            }
+        }
+        window.onload = function(){ //when the page loads
+            //get a reference to all the numericButton
+            // var numericButtons = document.getElementsByClassName("numberButton")
+            var numericButtons = document.querySelectorAll(".numericButton");
+            //wire a onclick event to them
+            for (var i = 0; i < numericButtons.length; i ++) { //go through all the buttons in the page
+                var selectedButton = numericButtons[i]; //get the current button
+                selectedButton.onclick = numericButtonClick; //this will wire up the onclick event => addNumber
+                //selectedButton.addEventListener("mouseover", numericButtonClick);
+            }
+            var specialButtons = document.querySelectorAll(".specialButton") //select all the special buttons
+            for (var i = 0; i < specialButtons.length; i ++) //go throught all the special buttons
+                specialButtons[i].onclick = specialButtonClick; //wire on click the specialButtonClick function
+        }
+    </script>
+  </body>
 </html>
